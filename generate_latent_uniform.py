@@ -6,11 +6,11 @@ class QUniformLatent:
         return {
             "required": {
                 "channels": ("INT", {"default": 4}),
-                "width": ("INT", {"default": 512}),
-                "height": ("INT", {"default": 512}),
+                "width": ("INT", {"default": 1024}),
+                "height": ("INT", {"default": 1024}),
                 "batch_size": ("INT", {"default": 1}),
-                "min": ("FLOAT", {"default": -1}),
-                "max": ("FLOAT", {"default": 1}),
+                "min": ("FLOAT", {"default": -1, "min": -1000, "max": 1000, "step": 0.001}),
+                "max": ("FLOAT", {"default": 1, "min": -1000, "max": 1000, "step": 0.001}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "control_after_generate": True, "tooltip": "The random seed used for creating the noise."}),
             },
         }

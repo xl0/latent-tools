@@ -24,6 +24,10 @@ class QPreviewLatent:
         samples = latent["samples"]
         assert isinstance(samples, torch.Tensor), f"Incorrect type for latent.samplels: Expected torch.Tensor, got {type(samples)}"
 
+        # lt uses matplotlib. Set non-interactive backend here.
+        import matplotlib
+        matplotlib.use('Agg')  # Set non-interactive backend
+
         # Generate SVG plot
         buf = BytesIO()
         lt.plot(samples, center="range").fig.savefig(buf, format='svg', dpi=100, bbox_inches='tight', pad_inches=0.1,)
