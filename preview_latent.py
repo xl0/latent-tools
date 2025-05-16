@@ -1,4 +1,3 @@
-import os
 import torch
 from io import BytesIO
 import base64
