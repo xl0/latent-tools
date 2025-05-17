@@ -1,4 +1,5 @@
 import os
+from numpy import dtype
 import torch
 import hashlib
 
@@ -10,7 +11,10 @@ class QLoadLatent:
         return {
             "required": {
                 "file_path": ("STRING", {"default": "input/latent.pt"}),
-                "normalize": (normalize_options, {"default": normalize_options[0]})
+                "normalize": (normalize_options, {"default": normalize_options[0]}),
+                "rand_sign": ("BOOLEAN", {"default": False}),
+                "rand_sign_seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff})
+
             },
         }
 
@@ -20,7 +24,7 @@ class QLoadLatent:
     FUNCTION = "load"
     OUTPUT_NODE = True
 
-    def load(self, file_path, normalize):
+    def load(self, file_path, normalize, rand_sign, rand_sign_seed):
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File {file_path} does not exist.")
 
@@ -38,6 +42,12 @@ class QLoadLatent:
         # The LATENT is supposed to be a batch of latents.
         if len(samples.shape) == 3: samples.unsqueeze_(0)
 
+        if rand_sign:
+            generator = torch.Generator().manual_seed(rand_sign_seed)
+            # Tensor filled with -1 +1 same shape as input
+            signs = (torch.randint(size=samples.shape, device=samples.device, low=0, high=2, generator=generator) * 2 - 1)
+            samples = samples * signs
+
         if normalize != "no":
 
             # The shape of LATENT is BCHW. Normalize either just the whole latent, or each channel separately,
@@ -51,14 +61,14 @@ class QLoadLatent:
         return ({"samples": samples},)
 
     @classmethod
-    def IS_CHANGED(cls, file_path, normalize):
+    def IS_CHANGED(cls, file_path, normalize, rand_sign, rand_sign_seed):
         m = hashlib.sha256()
         with open(file_path, 'rb') as f:
             m.update(f.read())
-        return (m.digest().hex(), normalize)
+        return (m.digest().hex(), normalize, rand_sign, rand_sign_seed)
 
     @classmethod
-    def VALIDATE_INPUTS(cls, file_path, normalize):
+    def VALIDATE_INPUTS(cls, file_path, normalize, rand_sign, rand_sign_seed):
         if normalize not in normalize_options: return f"Invalid option: {normalize}. Expected one of {normalize_options}"
 
         if not os.path.exists(file_path):
@@ -78,10 +88,10 @@ class QLoadLatentTimeline:
         return {
             "required": {
                 "file_path": ("STRING", {"default": "input/latent.pt"}),
+                "normalize": (normalize_options, {"default": normalize_options[0]}),
+                "rand_sign": ("BOOLEAN", {"default": False}),
+                "rand_sign_seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff})
             },
-            "optional": {
-                "normalize": (normalize_options, {"default": normalize_options[0]})
-            }
         }
 
     CATEGORY = "QTools"
@@ -98,7 +108,7 @@ class QLoadLatentTimeline:
     # H, W - Height and Width
 
 
-    def load(self, file_path, normalize):
+    def load(self, file_path, normalize, rand_sign, rand_sign_seed):
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File {file_path} does not exist.")
 
@@ -120,6 +130,12 @@ class QLoadLatentTimeline:
         # expand it to a batch of latents.
         if len(samples.shape) == 4: samples.unsqueeze_(0)
 
+        if rand_sign:
+            generator = torch.Generator().manual_seed(rand_sign_seed)
+            # Tensor filled with -1 +1 same shape as input
+            signs = (torch.randint(size=samples.shape, device=samples.device, low=0, high=2, generator=generator) * 2 - 1)
+            samples = samples * signs
+
         if normalize != "no":
             # The shape of LATENT is BCHW. Normalize either just the whole latent, or each channel separately,
             # which also normalizes the latent as a whole.
@@ -132,14 +148,14 @@ class QLoadLatentTimeline:
         return ({"samples": samples},)
 
     @classmethod
-    def IS_CHANGED(cls, file_path, normalize):
+    def IS_CHANGED(cls, file_path, normalize, rand_sign, rand_sign_seed):
         m = hashlib.sha256()
         with open(file_path, 'rb') as f:
             m.update(f.read())
-        return (m.digest().hex(), normalize)
+        return (m.digest().hex(), normalize, rand_sign, rand_sign_seed)
 
     @classmethod
-    def VALIDATE_INPUTS(cls, file_path, normalize):
+    def VALIDATE_INPUTS(cls, file_path, normalize, rand_sign, rand_sign_seed):
         if normalize not in normalize_options: return f"Invalid option: {normalize}. Expected one of {normalize_options}"
 
         if not os.path.exists(file_path):
