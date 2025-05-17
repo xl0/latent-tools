@@ -38,7 +38,7 @@ class QPreviewLatent:
         img_data_url = f"data:image/png;base64,{base64.b64encode(buf.getvalue()).decode('utf-8')}"
 
         html = f"""
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-0.5">
     <div class="flex gap-2 items-center">Latent:
         <pre>{lt.lovely(samples, depth=2)}</pre>
     </div>

@@ -33,4 +33,4 @@ class QGaussianLatent:
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):
-        return tuple(*kwargs.values())
+        return tuple(kwargs.values())

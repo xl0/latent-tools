@@ -82,3 +82,94 @@ class QKSampler:
 
     def sample(self, model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=1.0):
         return common_qksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=denoise)
+
+
+
+
+
+
+class QSamplerEulerAncestral:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required":
+                    {
+                        "model": ("MODEL", {}),
+                        "eta": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 100.0, "step":0.01, "round": False}),
+                        "s_noise": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 100.0, "step":0.01, "round": False}),
+                        "noise_timeline": ("LATENT", {})
+                        }
+               }
+    RETURN_TYPES = ("SAMPLER",)
+    CATEGORY = "sampling/custom_sampling/samplers"
+
+    FUNCTION = "get_sampler"
+
+    def get_sampler(self, model, eta, s_noise, noise_timeline: torch.Tensor):
+        noise_samples = noise_timeline["samples"]
+        if noise_samples.dim() == 4:
+            noise_samples = noise_samples.unsqueeze(1)
+
+        i = [0]
+        def noise_sampler(sigma, sigma_next):
+            print(f"noise_sampler {sigma} -> {sigma_next}")
+            print(noise_samples)
+
+            # return torch.randn((noise_samples.shape[0], *noise_samples.shape[2:]), device=model.load_device)
+            sample = noise_samples[:,i[0] % noise_samples.shape[1],:,:,:].to(model.load_device)
+            i[0] += 1
+            return sample
+
+        sampler = comfy.samplers.ksampler("euler_ancestral", {"eta": eta, "s_noise": s_noise, "noise_sampler":noise_sampler })
+        return (sampler, )
+
+
+class QSamplerCustom:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required":
+                    {"model": ("MODEL",),
+                    "latent_noise": ("LATENT", {}),
+                    "extra_seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "control_after_generate": True}),
+                    "cfg": ("FLOAT", {"default": 8.0, "min": 0.0, "max": 100.0, "step":0.1, "round": 0.01}),
+                    "positive": ("CONDITIONING", ),
+                    "negative": ("CONDITIONING", ),
+                    "sampler": ("SAMPLER", ),
+                    "sigmas": ("SIGMAS", ),
+                    "latent_image": ("LATENT", ),
+                     }
+                }
+
+    RETURN_TYPES = ("LATENT","LATENT")
+    RETURN_NAMES = ("output", "denoised_output")
+
+    FUNCTION = "sample"
+
+    CATEGORY = "sampling/custom_sampling"
+
+    def sample(self, model, latent_noise, extra_seed, cfg, positive, negative, sampler, sigmas, latent_image):
+        latent_image_samples: torch.Tensor = latent_image["samples"]
+        latent_noise_samples: torch.Tensor = latent_noise["samples"]
+        # latent_image_samples = comfy.sample.fix_empty_latent_channels(model, latent_image_samples)
+        assert model.get_model_object("latent_format").latent_channels == latent_image_samples.shape[1], "Wrong number of latent channels"
+        assert latent_noise_samples.dim() == latent_image_samples.dim(), "Unexpected number of dimensions"
+        assert latent_noise_samples.shape[-3:] == latent_image_samples.shape[-3:], "Shape mismatch"
+
+        noise_mask = None
+        if "noise_mask" in latent_image:
+            noise_mask = latent_image["noise_mask"]
+
+        x0_output = {}
+        callback = latent_preview.prepare_callback(model, sigmas.shape[-1] - 1, x0_output)
+
+        disable_pbar = not comfy.utils.PROGRESS_BAR_ENABLED
+        samples = comfy.sample.sample_custom(model, latent_noise_samples, cfg, sampler, sigmas, positive, negative, latent_image_samples, noise_mask=noise_mask,
+                                                callback=callback, disable_pbar=disable_pbar, seed=extra_seed)
+
+        out = latent_image.copy()
+        out["samples"] = samples
+        if "x0" in x0_output:
+            out_denoised = latent_image.copy()
+            out_denoised["samples"] = model.model.process_latent_out(x0_output["x0"].cpu())
+        else:
+            out_denoised = out
+        return (out, out_denoised)
