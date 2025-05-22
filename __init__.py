@@ -7,7 +7,7 @@ from .generate_latent_gaussian import QGaussianLatent
 from .generate_latent_uniform import QUniformLatent
 from .samplers import QKSampler, QSamplerCustom, QSamplerEulerAncestral
 from .image_size_setter import QImageSizeSetter
-
+from .reshape_latent import QReshapeLatent
 # import lovely_tensors as lt; lt.monkey_patch()
 
 NODE_CLASS_MAPPINGS = {
@@ -22,7 +22,8 @@ NODE_CLASS_MAPPINGS = {
     "QKSampler": QKSampler,
     "QSamplerCustom": QSamplerCustom,
     "QSamplerEulerAncestral": QSamplerEulerAncestral,
-    "QImageSizeSetter": QImageSizeSetter
+    "QImageSizeSetter": QImageSizeSetter,
+    "QReshapeLatent": QReshapeLatent,
 }
 
 WEB_DIRECTORY="./web/js"
