@@ -40,7 +40,7 @@ class QPreviewLatent:
         html = f"""
 <div class="flex flex-col gap-0.5">
     <div class="flex gap-2 items-center">Latent:
-        <pre>{lt.lovely(samples, depth=2)}</pre>
+        <pre>{lt.lovely(samples, depth=2, color=False)}</pre>
     </div>
     <div class="flex gap-2">Image: Batch size:  {samples.shape[0]}  Resolution:  {samples.shape[-1]*8} x {samples.shape[-2]*8}</div>
     <div class="flex flex-col gap-1">
