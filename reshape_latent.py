@@ -1,6 +1,35 @@
 import torch
 import math
 
+
+class QLatentToShape:
+    max_dim: int = 7
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "input": ("LATENT", {}),
+            }
+        }
+
+
+    CATEGORY = "QTools"
+
+    RETURN_TYPES = ("INT",)*max_dim
+    RETURN_NAMES = tuple(f"dim{i}" for i in range(max_dim))
+    FUNCTION = "shape"
+    # OUTPUT_NODE = True
+
+    def shape(self, input: torch.Tensor):
+        shape_list = list(input["samples"].shape)
+
+        if len(shape_list) > self.max_dim:    shape_list = shape_list[:self.max_dim]
+
+        while len(shape_list) < self.max_dim: shape_list.insert(0, 0)
+
+        return tuple(shape_list)
+
+
 class QReshapeLatent:
     @classmethod
     def INPUT_TYPES(cls):
@@ -22,7 +51,7 @@ class QReshapeLatent:
 
     RETURN_TYPES = ("LATENT",)
     FUNCTION = "reshape"
-    OUTPUT_NODE = True
+    # OUTPUT_NODE = True
 
     def reshape(self, input, strict, dim0, dim1, dim2, dim3, dim4, dim5, dim6):
         # Get the input tensor
