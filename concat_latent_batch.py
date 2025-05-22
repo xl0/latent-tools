@@ -8,6 +8,7 @@ class QConcatLatentBatch:
             "required": {
                 "latent1": ("LATENT", {}),
                 "latent2": ("LATENT", {}),
+                "dim": ("INT", {"min":-10, "max": 10, "default":0})
             }
         }
 
@@ -15,7 +16,7 @@ class QConcatLatentBatch:
     FUNCTION = "concat"
     RETURN_TYPES = ("LATENT", )
 
-    def concat(self, latent1: dict, latent2: dict):
+    def concat(self, latent1: dict, latent2: dict, dim:int):
         assert isinstance(latent1, dict), f"Incorrect type for latent1: Expected dict, got {type(latent1)}"
         assert isinstance(latent2, dict), f"Incorrect type for latent2: Expected dict, got {type(latent2)}"
         samples1 = latent1["samples"]
@@ -26,6 +27,6 @@ class QConcatLatentBatch:
         # if samples1.dim() < 4: raise ValueError(f"latent1 should have 4 dimensions, got {lt.lovely(samples1)}")
         # if samples2.dim() != 4: raise ValueError(f"latent2 should have 4 dimensions, got {lt.lovely(samples2)}")
 
-        concatenated = torch.cat([samples1, samples2], dim=0)
+        concatenated = torch.cat([samples1, samples2], dim=dim)
 
         return ({"samples": concatenated},)
