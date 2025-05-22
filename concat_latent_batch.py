@@ -23,8 +23,8 @@ class QConcatLatentBatch:
         assert isinstance(samples1, torch.Tensor), f"Incorrect type for latent1.samplels: Expected torch.Tensor, got {type(samples1)}"
         assert isinstance(samples2, torch.Tensor), f"Incorrect type for latent2.samplels: Expected torch.Tensor, got {type(samples2)}"
 
-        if samples1.dim() != 4: raise ValueError(f"latent1 should have 4 dimensions, got {lt.lovely(samples1)}")
-        if samples2.dim() != 4: raise ValueError(f"latent2 should have 4 dimensions, got {lt.lovely(samples2)}")
+        # if samples1.dim() < 4: raise ValueError(f"latent1 should have 4 dimensions, got {lt.lovely(samples1)}")
+        # if samples2.dim() != 4: raise ValueError(f"latent2 should have 4 dimensions, got {lt.lovely(samples2)}")
 
         concatenated = torch.cat([samples1, samples2], dim=0)
 
