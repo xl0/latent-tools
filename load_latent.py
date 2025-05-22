@@ -1,16 +1,26 @@
 import os
-from numpy import dtype
 import torch
 import hashlib
+import folder_paths
+
 
 normalize_options = ["no", "channel", "image"]
 
 class QLoadLatent:
     @classmethod
     def INPUT_TYPES(cls):
+
+        input_dir = folder_paths.get_input_directory()
+        files = []
+        for root, dirs, fs in os.walk(input_dir):
+            for f in fs:
+                if f.endswith(".pt") and os.path.isfile(os.path.join(root, f)):
+                    rel_path = os.path.relpath(os.path.join(root, f))
+                    files.append(rel_path)
+
         return {
             "required": {
-                "file_path": ("STRING", {"default": "input/latent.pt"}),
+                "file_path": (sorted(files), {"default": "input/latent.pt"}),
                 "normalize": (normalize_options, {"default": normalize_options[0]}),
                 "rand_sign": ("BOOLEAN", {"default": False}),
                 "rand_sign_seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff})
@@ -76,18 +86,23 @@ class QLoadLatent:
         return True
 
 
-import os
-import torch
-import hashlib
-
 normalize_options = ["no", "channel", "image"]
 
 class QLoadLatentTimeline:
     @classmethod
     def INPUT_TYPES(cls):
+
+        input_dir = folder_paths.get_input_directory()
+        files = []
+        for root, dirs, fs in os.walk(input_dir):
+            for f in fs:
+                if f.endswith(".pt") and os.path.isfile(os.path.join(root, f)):
+                    rel_path = os.path.relpath(os.path.join(root, f))
+                    files.append(rel_path)
+
         return {
             "required": {
-                "file_path": ("STRING", {"default": "input/latent.pt"}),
+                "file_path": (sorted(files), {"default": "input/latent.pt"}),
                 "normalize": (normalize_options, {"default": normalize_options[0]}),
                 "rand_sign": ("BOOLEAN", {"default": False}),
                 "rand_sign_seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff})
