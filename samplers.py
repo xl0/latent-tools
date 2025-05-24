@@ -128,7 +128,6 @@ class QSamplerCustom:
     def INPUT_TYPES(s):
         return {"required":
                     {"model": ("MODEL",),
-                    "latent_noise": ("LATENT", {}),
                     "extra_seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "control_after_generate": True}),
                     "cfg": ("FLOAT", {"default": 8.0, "min": 0.0, "max": 100.0, "step":0.1, "round": 0.01}),
                     "positive": ("CONDITIONING", ),
@@ -136,6 +135,7 @@ class QSamplerCustom:
                     "sampler": ("SAMPLER", ),
                     "sigmas": ("SIGMAS", ),
                     "latent_image": ("LATENT", ),
+                    "latent_noise": ("LATENT", ),
                      }
                 }
 
@@ -146,7 +146,7 @@ class QSamplerCustom:
 
     CATEGORY = "sampling/custom_sampling"
 
-    def sample(self, model, latent_noise, extra_seed, cfg, positive, negative, sampler, sigmas, latent_image):
+    def sample(self, model, extra_seed, cfg, positive, negative, sampler, sigmas, latent_image, latent_noise):
         latent_image_samples: torch.Tensor = latent_image["samples"]
         latent_noise_samples: torch.Tensor = latent_noise["samples"]
         # latent_image_samples = comfy.sample.fix_empty_latent_channels(model, latent_image_samples)
