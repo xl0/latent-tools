@@ -16,7 +16,7 @@ class QLatentToShape:
     CATEGORY = "QTools"
 
     RETURN_TYPES = ("INT",)*max_dim
-    RETURN_NAMES = tuple(f"dim{i}" for i in range(max_dim))
+    RETURN_NAMES = tuple(f"dim" for _ in range(max_dim))
     FUNCTION = "shape"
     # OUTPUT_NODE = True
 

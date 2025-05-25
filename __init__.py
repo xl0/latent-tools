@@ -8,7 +8,7 @@ from .generate_latent_uniform import QUniformLatent
 from .samplers import QKSampler, QSamplerCustom, QSamplerEulerAncestral
 from .image_size_setter import QImageSizeSetter
 from .reshape_latent import QReshapeLatent, QLatentToShape
-# import lovely_tensors as lt; lt.monkey_patch()
+import lovely_tensors as lt; lt.monkey_patch()
 
 NODE_CLASS_MAPPINGS = {
     "QLoadLatent": QLoadLatent,
