@@ -1,9 +1,8 @@
 import torch
-import lovely_tensors as lt
 
 blend_choice = ["interpolate", "add", "multiply", "abs_max", "abs_min", "max", "min", "sample"]
 
-class QBlendLatent:
+class LTBlendLatent:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -18,15 +17,19 @@ class QBlendLatent:
             }
         }
 
-    CATEGORY = "QTools"
+    CATEGORY = "LatentTools"
+    DESCRIPTION = "Blend two latent tensors using different modes"
     FUNCTION = "blend"
     RETURN_TYPES = ("LATENT", )
 
     def blend(self, latent1: dict, latent2: dict, mode: str, ratio:int, seed: int):
         assert isinstance(latent1, dict) and isinstance(latent2, dict), "Inputs must be dictionaries"
         samples1, samples2 = latent1["samples"], latent2["samples"]
-        assert isinstance(samples1, torch.Tensor) and isinstance(samples2, torch.Tensor), "Samples must be torch.Tensor"
-        assert samples1.shape == samples2.shape, f"Shape mismatch: {samples1.shape} vs {samples2.shape}"
+
+        assert isinstance(samples1, torch.Tensor), "latent1['samples'] must be torch.Tensor"
+        assert isinstance(samples2, torch.Tensor), "latent2['samples'] must be torch.Tensor"
+
+        assert samples1.shape == samples2.shape, f"Shape mismatch: latent1: {samples1.shape} vs latent2: {samples2.shape}"
 
         if mode == "interpolate":
             blended = samples1 * ratio + samples2 * (1 - ratio)

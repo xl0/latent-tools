@@ -1,6 +1,6 @@
 import torch
 
-class QGaussianLatent:
+class LTRandomGaussian:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -9,16 +9,16 @@ class QGaussianLatent:
                 "width": ("INT", {"default": 1024}),
                 "height": ("INT", {"default": 1024}),
                 "batch_size": ("INT", {"default": 1}),
-                "mean": ("FLOAT", {"default": 0. , "min": -100, "max": 100, "step": 0.001 }),
-                "std": ("FLOAT", {"default": 1. , "min": 0, "max": 100, "step": 0.001}),
+                "mean": ("FLOAT", {"default": 0. , "min": -100, "max": 100, "step": 0.0001 }),
+                "std": ("FLOAT", {"default": 1. , "min": 0, "max": 100, "step": 0.0001}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff,
                                 "control_after_generate": True,
                                 "tooltip": "The random seed used for creating the noise."}),
             },
         }
 
-    CATEGORY = "QTools"
-
+    CATEGORY = "LatentTools"
+    DESCRIPTION = "Fill a latent space with gaussian random noise with given mean/std"
     RETURN_TYPES = ("LATENT",)
     FUNCTION = "random_gaussian"
     OUTPUT_NODE = True
@@ -30,7 +30,3 @@ class QGaussianLatent:
         samples = torch.randn(batch_size, channels, width//8, height//8, generator=generator) * std + mean
 
         return ({"samples": samples},)
-
-    @classmethod
-    def IS_CHANGED(cls, **kwargs):
-        return tuple(kwargs.values())

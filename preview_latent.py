@@ -4,7 +4,7 @@ from io import BytesIO
 import base64
 import lovely_tensors as lt
 
-class QPreviewLatent:
+class LTPreviewLatent:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -14,6 +14,7 @@ class QPreviewLatent:
         }
 
     CATEGORY = "QTools"
+    DESCRIPTION = "Preview a latent tensor"
     FUNCTION = "preview"
     OUTPUT_NODE = True
     RETURN_TYPES = ()

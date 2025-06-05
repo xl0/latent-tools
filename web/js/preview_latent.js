@@ -1,7 +1,3 @@
-/*
-Based on Preview Any - original implement from https://github.com/rgthree/rgthree-comfy/blob/main/py/display_any.py
- */
-
 import { app } from "../../scripts/app.js";
 
 function createContainer() {
@@ -11,9 +7,9 @@ function createContainer() {
 }
 
 app.registerExtension({
-  name: 'QTools.QPreviewLatent',
+  name: 'LatentTools.LTPreviewLatent',
   async beforeRegisterNodeDef(nodeType, nodeData) {
-    if (nodeData.name === 'QPreviewLatent') {
+    if (nodeData.name === 'LTPreviewLatent') {
       const onNodeCreated = nodeType.prototype.onNodeCreated
 
       nodeType.prototype.onNodeCreated = function () {

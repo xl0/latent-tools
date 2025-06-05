@@ -1,18 +1,18 @@
 import torch
-import lovely_tensors as lt
 
-class QConcatLatentBatch:
+class LTLatentsConcatenate:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
                 "latent1": ("LATENT", {}),
                 "latent2": ("LATENT", {}),
-                "dim": ("INT", {"min":-10, "max": 10, "default":0})
+                "dim": ("INT", {"min":-10, "max": 10, "default":-4})
             }
         }
 
-    CATEGORY = "QTools"
+    CATEGORY = "LatentTools"
+    DESCRIPTION = "Concatenate two latents along a given dimension"
     FUNCTION = "concat"
     RETURN_TYPES = ("LATENT", )
 
@@ -24,6 +24,7 @@ class QConcatLatentBatch:
         assert isinstance(samples1, torch.Tensor), f"Incorrect type for latent1.samplels: Expected torch.Tensor, got {type(samples1)}"
         assert isinstance(samples2, torch.Tensor), f"Incorrect type for latent2.samplels: Expected torch.Tensor, got {type(samples2)}"
 
+        # The video models have weird number of dimensions. As long as the numbers match, just let it be.
         # if samples1.dim() < 4: raise ValueError(f"latent1 should have 4 dimensions, got {lt.lovely(samples1)}")
         # if samples2.dim() != 4: raise ValueError(f"latent2 should have 4 dimensions, got {lt.lovely(samples2)}")
 

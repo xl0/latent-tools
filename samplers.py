@@ -12,7 +12,7 @@ import comfy.samplers
 import latent_preview
 
 
-def qprepare_noise(latent_noise, noise_inds=None):
+def lt_prepare_noise(latent_noise, noise_inds=None):
 
     if noise_inds is None:
         return latent_noise
@@ -22,7 +22,7 @@ def qprepare_noise(latent_noise, noise_inds=None):
     return torch.cat([noises[np.where(unique_inds == i)[0][0]] for i in noise_inds], dim=0)
 
 
-def common_qksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=1.0, disable_noise=False, start_step=None, last_step=None, force_full_denoise=False):
+def common_lt_ksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=1.0, disable_noise=False, start_step=None, last_step=None, force_full_denoise=False):
     latent_image_samples: torch.Tensor = latent_image["samples"]
     latent_noise_samples: torch.Tensor = latent_noise["samples"]
     # latent_image_samples = comfy.sample.fix_empty_latent_channels(model, latent_image_samples)
@@ -34,7 +34,7 @@ def common_qksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, 
         noise = torch.zeros_like(latent_image_samples)
     else:
         batch_inds = latent_image["batch_index"] if "batch_index" in latent_image else None
-        noise = qprepare_noise(latent_noise_samples, batch_inds)
+        noise = lt_prepare_noise(latent_noise_samples, batch_inds)
 
 
     # If we have 1 sample of noise, and multiple input images, broadcast the noise to match the input.
@@ -54,7 +54,7 @@ def common_qksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, 
     out["samples"] = samples
     return (out, )
 
-class QKSampler:
+class LTKSampler:
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -77,11 +77,11 @@ class QKSampler:
     OUTPUT_TOOLTIPS = ("The denoised latent.",)
     FUNCTION = "sample"
 
-    CATEGORY = "sampling"
-    DESCRIPTION = "Uses the provided model, positive and negative conditioning to denoise the latent image."
+    CATEGORY = "LatentTools"
+    DESCRIPTION = "KSampler that accepts an additional input for latent noise"
 
     def sample(self, model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=1.0):
-        return common_qksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=denoise)
+        return common_lt_ksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=denoise)
 
 
 

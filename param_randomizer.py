@@ -1,33 +1,6 @@
 import random
 
-class QParamaRandomizerList:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "options": ("STRING", {"default":"option1,option2"}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff,
-                                "control_after_generate": True}),
-
-            }
-        }
-
-    CATEGORY = "QTools"
-    FUNCTION = "param_randomizer"
-    RETURN_TYPES = ("STRING", "INT", "FLOAT")
-
-    def param_randomizer(self, options:str, seed:int):
-        local_random = random.Random(seed)
-        option_list = options.split(',')
-        result = local_random.choice(option_list).strip()
-
-        try:
-            float_value = float(result)
-            return result, int(float_value), float_value
-        except ValueError:
-            return result, 0, 0.0
-
-class QParamRandomizerRange:
+class LTRandomRangeUniform:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -39,12 +12,35 @@ class QParamRandomizerRange:
             }
         }
 
-    CATEGORY = "QTools"
-    FUNCTION = "param_randomizer"
+    CATEGORY = "LatentTools"
+    DESCRIPTION = "Randomize a parameter using a uniform distribution"
+    FUNCTION = "param_range_uniform"
     RETURN_TYPES = ("FLOAT", "INT")
 
-    def param_randomizer(self, min_value: float, max_value: float, seed: int):
+    def param_range_uniform(self, min_value: float, max_value: float, seed: int):
         local_random = random.Random(seed)
         result = local_random.uniform(min_value, max_value)
         return result, int(result)
 
+
+class LTRandomRangeGaussian:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "mean": ("FLOAT", {"default": 0.0, "min": -1000000, "max": 1000000, "step":0.00001}),
+                "std": ("FLOAT", {"default": 1.0, "min": 0.00001, "max": 1000000, "step":0.00001}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff,
+                                 "control_after_generate": True}),
+            }
+        }
+
+    CATEGORY = "LatentTools"
+    DESCRIPTION = "Randomize a parameter using a gaussian distribution"
+    FUNCTION = "param_randomizer"
+    RETURN_TYPES = ("FLOAT", "INT")
+
+    def param_randomizer(self, mean: float, std: float, seed: int):
+        local_random = random.Random(seed)
+        result = local_random.gauss(mean, std)
+        return result, int(result)

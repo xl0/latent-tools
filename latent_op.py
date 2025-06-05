@@ -3,7 +3,7 @@ import lovely_tensors as lt
 
 ops = ["add", "mul", "pow", "exp", "abs", "clamp_bottom", "clamp_top", "norm", "mean", "std", "sigmoid", "nop"]
 
-class QLatentOp:
+class LTLatentOp:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -14,7 +14,8 @@ class QLatentOp:
             }
         }
 
-    CATEGORY = "QTools"
+    CATEGORY = "LatentTools"
+    DESCRIPTION = "Apply an operation to a latent tensor"
     FUNCTION = "op"
     RETURN_TYPES = ("LATENT", )
 
