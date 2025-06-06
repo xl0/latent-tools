@@ -27,6 +27,6 @@ class LTRandomGaussian:
         generator = torch.Generator()
         generator.manual_seed(seed)
 
-        samples = torch.randn(batch_size, channels, width//8, height//8, generator=generator) * std + mean
+        samples = torch.randn(batch_size, channels, height//8, width//8, generator=generator) * std + mean
 
         return ({"samples": samples},)

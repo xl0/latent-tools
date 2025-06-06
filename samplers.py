@@ -21,7 +21,6 @@ def lt_prepare_noise(latent_noise, noise_inds=None):
     noises = [latent_noise[i:i+1] for i in unique_inds]
     return torch.cat([noises[np.where(unique_inds == i)[0][0]] for i in noise_inds], dim=0)
 
-
 def common_lt_ksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=1.0, disable_noise=False, start_step=None, last_step=None, force_full_denoise=False):
     latent_image_samples: torch.Tensor = latent_image["samples"]
     latent_noise_samples: torch.Tensor = latent_noise["samples"]
@@ -60,7 +59,6 @@ class LTKSampler:
         return {
             "required": {
                 "model": ("MODEL", {"tooltip": "The model used for denoising the input latent."}),
-                "latent_noise": ("LATENT", {}),
                 "extra_seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "control_after_generate": True, "tooltip": "The random seed used for creating the noise."}),
                 "steps": ("INT", {"default": 20, "min": 1, "max": 10000, "tooltip": "The number of steps used in the denoising process."}),
                 "cfg": ("FLOAT", {"default": 8.0, "min": 0.0, "max": 100.0, "step":0.1, "round": 0.01, "tooltip": "The Classifier-Free Guidance scale balances creativity and adherence to the prompt. Higher values result in images more closely matching the prompt however too high values will negatively impact quality."}),
@@ -69,6 +67,7 @@ class LTKSampler:
                 "positive": ("CONDITIONING", {"tooltip": "The conditioning describing the attributes you want to include in the image."}),
                 "negative": ("CONDITIONING", {"tooltip": "The conditioning describing the attributes you want to exclude from the image."}),
                 "latent_image": ("LATENT", {"tooltip": "The latent image to denoise."}),
+                "latent_noise": ("LATENT", {"tooltip": "The latent noise to use for denoising."}),
                 "denoise": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "The amount of denoising applied, lower values will maintain the structure of the initial image allowing for image to image sampling."}),
             }
         }
@@ -80,11 +79,8 @@ class LTKSampler:
     CATEGORY = "LatentTools"
     DESCRIPTION = "KSampler that accepts an additional input for latent noise"
 
-    def sample(self, model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=1.0):
+    def sample(self, model, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, latent_noise, denoise=1.0):
         return common_lt_ksampler(model, latent_noise, extra_seed, steps, cfg, sampler_name, scheduler, positive, negative, latent_image, denoise=denoise)
-
-
-
 
 
 

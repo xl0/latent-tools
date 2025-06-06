@@ -10,7 +10,7 @@ class LTBlendLatent:
                 "latent1": ("LATENT", {}),
                 "latent2": ("LATENT", {}),
                 "mode": (blend_choice, {}),
-                "ratio": ("FLOAT", {"min": 0, "max":1, "default":0.5, "step": 0.001}),
+                "ratio": ("FLOAT", {"min": 0, "max":1, "default":0.5, "step": 0.001, "tooltip": "Blend ratio (0.0 to 1.0), only used for mode=sample and mode=interpolate"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff,
                                 "control_after_generate": True,
                                 "tooltip": "See of the random sampling (mode=sample"}),
