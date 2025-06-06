@@ -10,7 +10,7 @@ from .concat_latent import LTLatentsConcatenate
 
 from .samplers import LTKSampler
 
-from .param_randomizer import LTRandomRangeGaussian, LTRandomRangeUniform
+from .param_search import LTNumberRangeGaussian, LTNumberRangeUniform, LTFloatSteps
 
 NODE_CLASS_MAPPINGS = {
     "LTLatentLoad": LTLatentLoad,
@@ -23,8 +23,8 @@ NODE_CLASS_MAPPINGS = {
     "LTLatentToShape": LTLatentToShape,
     "LTBlendLatent": LTBlendLatent,
     "LTLatentOp": LTLatentOp,
-    "LTParamRandomizerRange": LTRandomRangeUniform,
-    "LTParamRandomizerGaussian": LTRandomRangeGaussian,
-}
+    "LTNumberRangeUniform": LTNumberRangeUniform,
+    "LTNumberRangeGaussian": LTNumberRangeGaussian,
+} | { f.__name__: f for f in LTFloatSteps }
 
 WEB_DIRECTORY="./web/js"

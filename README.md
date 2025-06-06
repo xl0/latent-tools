@@ -11,7 +11,36 @@ Or use the ComfyUI extension manager.
 
 ## Available Nodes
 
-### Latent noise generation
+### Preview and Debug
+
+#### LTPreviewLatent
+Visualizes latent tensors for debugging and inspection.
+
+![alt text](assets/PreviewLatent.png)
+
+### KSampler with additional noise input
+
+#### LTKSampler
+
+A KSampler variant that accepts an additional input for latent noise, allowing for precise control over the noise used in the sampling process.
+
+| ![KSampler with Noise Input](assets/KSampler.png) |
+|------------|
+| **Inputs** |
+| - `model`: The model used for denoising |
+| - `extra_seed`: Random seed for noise generation |
+| - `steps`: Number of steps in the denoising process |
+| - `cfg`: Classifier-Free Guidance scale |
+| - `sampler_name`: Algorithm used for sampling |
+| - `scheduler`: Controls how noise is gradually removed |
+| - `positive`: Positive conditioning |
+| - `negative`: Negative conditioning |
+| - `latent_image`: The latent image to denoise |
+| - `latent_noise`: The specific latent noise to use for denoising |
+| - `denoise`: Amount of denoising to apply |
+| **Outputs** |
+| - `latent`: The denoised latent tensor |
+
 
 #### LTGaussianLatent
 
@@ -158,12 +187,6 @@ Extracts the shape of a latent tensor.
 **Outputs:**
 - Returns up to 7 dimensions of the input latent shape
 
-### Preview and Debug
-
-#### LTPreviewLatent
-Visualizes latent tensors for debugging and inspection.
-
-![alt text](assets/LTPreviewLatent.png){width=70%}
 
 ### Parameter Randomization
 
