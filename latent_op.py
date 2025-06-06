@@ -45,8 +45,6 @@ class LTLatentOp:
             samples = (samples * arg) / samples.std()
         elif op == "sigmoid":
             samples = torch.sigmoid(samples)
-        elif op == "sigmoid":
-            samples = torch.sigmoid(samples)
         elif op == "nop":
             pass
         else:

@@ -21,12 +21,16 @@ class LTLatentsConcatenate:
         assert isinstance(latent2, dict), f"Incorrect type for latent2: Expected dict, got {type(latent2)}"
         samples1 = latent1["samples"]
         samples2 = latent2["samples"]
-        assert isinstance(samples1, torch.Tensor), f"Incorrect type for latent1.samplels: Expected torch.Tensor, got {type(samples1)}"
-        assert isinstance(samples2, torch.Tensor), f"Incorrect type for latent2.samplels: Expected torch.Tensor, got {type(samples2)}"
+        assert isinstance(samples1, torch.Tensor), f"Incorrect type for latent1.samples: Expected torch.Tensor, got {type(samples1).__name__}"
+        assert isinstance(samples2, torch.Tensor), f"Incorrect type for latent2.samples: Expected torch.Tensor, got {type(samples2).__name__}"
+        
+        # Validate dimensions
+        if samples1.dim() != samples2.dim():
+            raise ValueError(f"Dimension mismatch: latent1 has {samples1.dim()} dimensions, latent2 has {samples2.dim()} dimensions")
 
         # The video models have weird number of dimensions. As long as the numbers match, just let it be.
-        # if samples1.dim() < 4: raise ValueError(f"latent1 should have 4 dimensions, got {lt.lovely(samples1)}")
-        # if samples2.dim() != 4: raise ValueError(f"latent2 should have 4 dimensions, got {lt.lovely(samples2)}")
+        # if samples1.dim() < 4: raise ValueError(f"latent1 should have 4 dimensions, got {samples1.dim()} dimensions")
+        # if samples2.dim() != 4: raise ValueError(f"latent2 should have 4 dimensions, got {samples2.dim()} dimensions")
 
         concatenated = torch.cat([samples1, samples2], dim=dim)
 

@@ -22,7 +22,7 @@ class LTBlendLatent:
     FUNCTION = "blend"
     RETURN_TYPES = ("LATENT", )
 
-    def blend(self, latent1: dict, latent2: dict, mode: str, ratio:int, seed: int):
+    def blend(self, latent1: dict, latent2: dict, mode: str, ratio: float, seed: int) -> tuple[dict, ...]:
         assert isinstance(latent1, dict) and isinstance(latent2, dict), "Inputs must be dictionaries"
         samples1, samples2 = latent1["samples"], latent2["samples"]
 

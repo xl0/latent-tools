@@ -3,6 +3,7 @@ import torch
 from io import BytesIO
 import base64
 import lovely_tensors as lt
+import folder_paths  # For ComfyUI file handling
 
 class LTPreviewLatent:
     @classmethod
@@ -13,7 +14,7 @@ class LTPreviewLatent:
             }
         }
 
-    CATEGORY = "QTools"
+    CATEGORY = "LatentTools"
     DESCRIPTION = "Preview a latent tensor"
     FUNCTION = "preview"
     OUTPUT_NODE = True
