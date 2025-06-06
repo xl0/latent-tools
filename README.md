@@ -132,8 +132,16 @@ Example1:
 ![Latent Concatenate Example1](assets/LatentsConcatenateExample1.png)
 
 Example2:
-Stable Video Diffusion xt, concatenating 3 different kinds of noise:
+Stable Video Diffusion xt (24 frames total), concatenating
+- 10 frames Gaussian noise (σ=1 μ=0)
+- 4  frames Gaussian noise (σ=1.2 μ=0)
+- 10 frames Gaussian noise (σ=1 μ=0)
 ![Latent Concatenate Example2](assets/LatentsConcatenateExample2.png)
+
+
+| 10f (σ=1 μ=0) + 4f (σ=1.2 μ=0) + 10f (σ=1 μ=0) | 24f (σ=1 μ=0) |
+|---|---|
+| ![Latent Concatenate Example2](assets/LatentsConcatenateExample2a.gif) | ![Latent Concatenate Example2](assets/LatentsConcatenateExample2b.gif) |
 
 
 #### LTReshapeLatent
