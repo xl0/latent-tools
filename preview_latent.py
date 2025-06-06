@@ -31,11 +31,10 @@ class LTPreviewLatent:
         # lt uses matplotlib. Set non-interactive backend here.
         import matplotlib
         matplotlib.use('Agg')  # Set non-interactive backend
-
-        # Generate SVG plot
+        # Generate PNG plot
         buf = BytesIO()
-        lt.plot(samples, center="range").fig.savefig(buf, format='svg', dpi=100, bbox_inches='tight', pad_inches=0.1,)
-        svg_data = buf.getvalue().decode('utf-8')
+        lt.plot(samples, center="range").fig.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1)
+        plot_data_url = f"data:image/png;base64,{base64.b64encode(buf.getvalue()).decode('utf-8')}"
 
         # Generate image for channels visualization
         buf = BytesIO()
@@ -52,26 +51,22 @@ class LTPreviewLatent:
         latent_plt = f"""
     <div class="flex flex-col gap-1">
         Distribution:
-        <div class="comfy-img-preview">
-            {svg_data}
-        </div>
+        <img src="{plot_data_url}">
     </div>
     """
 
         latent_chans = f"""
-    <div class="flex flex-col gap-1"
+    <div class="flex flex-col gap-1">
         Channels:
-        <div class="comfy-img-preview">
-            <img src="{img_data_url}" >
-        </div>
+        <img src="{img_data_url}">
     </div>
     """
 
         if mask is not None:
-            # Generate SVG plot
+            # Generate PNG plot
             buf = BytesIO()
-            lt.plot(mask, center="range").fig.savefig(buf, format='svg', dpi=100, bbox_inches='tight', pad_inches=0.1,)
-            mask_svg_data = buf.getvalue().decode('utf-8')
+            lt.plot(mask, center="range").fig.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0.1)
+            mask_plot_data_url = f"data:image/png;base64,{base64.b64encode(buf.getvalue()).decode('utf-8')}"
 
             # Generate image for channels visualization
             buf = BytesIO()
@@ -89,7 +84,7 @@ class LTPreviewLatent:
         <div class="flex flex-col gap-1">
             Distribution:
             <div class="comfy-img-preview">
-                {mask_svg_data}
+                <img src="{mask_plot_data_url}">
             </div>
         </div>
         """
