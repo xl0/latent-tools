@@ -15,9 +15,9 @@ A collection of nodes for manipulating latent tensors in ComfyUI. These tools pr
 
 Generates latent tensors filled with random values from a normal (Gaussian) distribution.
 
-| **Inputs** |
-|------------|
 | ![Gaussian Latent Node](assets/GaussianLatent.png) |
+|------------|
+| **Inputs** |
 | - `channels`: Number of channels (default: 4) |
 | - `width`: Width of the latent space (will be divided by 8) |
 | - `height`: Height of the latent space (will be divided by 8) |
@@ -25,6 +25,10 @@ Generates latent tensors filled with random values from a normal (Gaussian) dist
 | - `mean`: Mean of the normal distribution |
 | - `std`: Standard deviation of the normal distribution |
 | - `seed`: Random seed |
+| **Outputs** |
+|------------|
+| - `latent`: Generated latent tensor |
+| ![Gaussian Latent Node](assets/GaussianPlot.png) |
 
 #### LTUniformLatent
 Generates latent tensors with values uniformly distributed between min and max.
