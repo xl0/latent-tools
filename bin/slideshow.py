@@ -13,12 +13,12 @@ class SingleMetavarHelpFormatter(argparse.ArgumentDefaultsHelpFormatter):
     def _format_action_invocation(self, action):
         if not action.option_strings or action.nargs == 0:
             return super()._format_action_invocation(action)
-        
+
         # If there are choices, only show them once
         if action.choices:
             metavar = '{' + ','.join(action.choices) + '}'
             return ', '.join(action.option_strings) + ' ' + metavar
-        
+
         default = super()._format_action_invocation(action)
         return default
 
@@ -158,7 +158,8 @@ def create_slideshow(
     verbose: bool = False,
     show_filenames: bool = False,
     filename_mode: str = "full",
-    fps: int = 25
+    fps: int = 25,
+    dry_run: bool = False
 ) -> bool:
     """Create a slideshow video from a list of images.
 
@@ -174,6 +175,7 @@ def create_slideshow(
         verbose: Enable verbose logging
         show_filenames: Display filenames in the top left corner of each frame
         filename_mode: How to display filenames: 'full' (complete filename), 'short' (truncated name), or 'number' (frame number)
+        dry_run: If True, only print the ffmpeg command without executing it
 
     Returns:
         True if successful, False otherwise
@@ -223,7 +225,7 @@ def create_slideshow(
         # For a slideshow with transitions, each frame should be shown for its full duration
         # The formula is: sum of all frame durations + any additional time needed for transitions
         total_duration = len(image_files) * frame_duration
-        
+
         for i, img in enumerate(image_files):
             # Calculate appropriate duration for each input:
             # - First image needs to be available for the entire slideshow duration
@@ -235,14 +237,14 @@ def create_slideshow(
                 input_duration = frame_duration
             else:
                 input_duration = frame_duration * 2
-                
+
             inputs.append(f"-loop 1 -t {input_duration} -i \"{img}\"")
 
         # Create filter for each input to prepare it
         for i in range(len(image_files)):
             # Base filter to set PTS and format
             base_filter = f"[{i}:v]setpts=PTS-STARTPTS,format=yuva420p"
-            
+
             # If showing filenames, add drawtext filter
             if show_filenames:
                 # Determine what text to display based on filename_mode
@@ -259,17 +261,17 @@ def create_slideshow(
                 else:
                     # Default to basename if mode is not recognized
                     display_text = os.path.basename(image_files[i])
-                    
+
                 # Add drawtext filter with text in top left corner
                 base_filter += f",drawtext=text='{display_text}':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=10:y=10"
-                
+
             # Complete the filter
             filter_parts.append(f"{base_filter}[v{i}];")
 
         # Calculate frame-based durations for precise timing
         frame_duration_frames = int(frame_duration * fps)
         transition_duration_frames = int(transition_duration * fps)
-        
+
         # Create xfade filters to transition between images
         last_output = f"[v0]"
         for i in range(1, len(image_files)):
@@ -281,19 +283,19 @@ def create_slideshow(
                 f"{last_output}[v{i}]xfade=transition={transition_type}:duration={transition_duration}:offset={offset}[v{i}out];"
             )
             last_output = f"[v{i}out]"
-            
+
         # Calculate the expected duration for verification
         # The total duration is simply the number of frames times the frame duration
         expected_duration = len(image_files) * frame_duration
         expected_frames = int(expected_duration * fps)
         logger.debug(f"Number of images: {len(image_files)}, Frame duration: {frame_duration}s, Transition duration: {transition_duration}s")
         logger.debug(f"Expected slideshow duration: {expected_duration:.2f} seconds ({expected_frames} frames at {fps} fps)")
-        
+
         filter_complex = "".join(filter_parts)
 
         # Build ffmpeg command
         overwrite_flag = "-y" if overwrite else "-n"
-        
+
         # Add precise timing control to ensure exact duration
         cmd = f"ffmpeg {overwrite_flag} {' '.join(inputs)} -filter_complex \"{filter_complex[:-1]}\" -map \"{last_output}\" \
               -r {fps} -pix_fmt yuv420p -c:v libx264 -crf {video_quality} -preset {preset} \
@@ -301,6 +303,11 @@ def create_slideshow(
 
         logger.info(f"Creating slideshow with {len(image_files)} images")
         logger.debug(f"Running command: {cmd}")
+
+        # If dry run, just print the command and return
+        if dry_run:
+            print("\n--dry-run: No action taken.")
+            return True
 
         # Execute ffmpeg command
         process = subprocess.run(cmd, shell=True, text=True)
@@ -317,7 +324,7 @@ def create_slideshow(
         except Exception as e:
             # If we can't get the duration, just log success without it
             logger.info(f"Slideshow created successfully: {output_file}")
-            
+
         return True
 
     except FileNotFoundError as e:
@@ -349,14 +356,14 @@ def main():
         formatter_class=SingleMetavarHelpFormatter,
         epilog="Use the --list-effects option to see detailed descriptions of all transition effects"
     )
-    
+
     # Add --list-effects as an option
     parser.add_argument(
         "--list-effects",
         action="store_true",
         help="List all available transition effects with descriptions and exit"
     )
-    
+
     parser.add_argument(
         "image_list",
         help="Path to a file containing a list of images (one per line, format: file 'path/to/image.jpg')"
@@ -377,7 +384,7 @@ def main():
         default=0.5,
         help="Duration of transition between frames in seconds"
     )
-    
+
     parser.add_argument(
         "-e", "--effect",
         default="fade",
@@ -411,19 +418,25 @@ def main():
         action="store_true",
         help="Display filenames in the top left corner of each frame"
     )
-    
+
     parser.add_argument(
         "--filename-mode",
         choices=["full", "short", "number"],
         default="full",
         help="How to display filenames: 'full' (complete filename), 'short' (truncated name), or 'number' (frame number)"
     )
-    
+
     parser.add_argument(
         "--fps",
         type=int,
         default=25,
         help="Output video frame rate"
+    )
+
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the ffmpeg command without executing it"
     )
 
     args = parser.parse_args()
@@ -449,7 +462,8 @@ def main():
         verbose=args.verbose,
         show_filenames=args.show_filenames,
         filename_mode=args.filename_mode,
-        fps=args.fps
+        fps=args.fps,
+        dry_run=args.dry_run
     )
 
     # Return appropriate exit code
