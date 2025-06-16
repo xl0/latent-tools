@@ -2,6 +2,8 @@
 
 A collection of nodes for manipulating latent tensors in ComfyUI. These tools provide various operations for working with latent representations in stable diffusion workflows.
 
+gMade in collaboration with [fzayguler](https://github.com/fzayguler)
+
 ## Installation
 
 1. Clone this repository into your `ComfyUI/custom_nodes/` directory
@@ -216,7 +218,7 @@ Reshapes a latent tensor to new dimensions.
 **Example:**
 Reshape one latent to match another one:
 
-<img src="assets/ShapeExample.png" alt="LTReshapeLatent" width="70%"> 
+<img src="assets/ShapeExample.png" alt="LTReshapeLatent" width="70%">
 <!-- ![Latent Reshape Example](assets/ShapeExample.png) -->
 
 
