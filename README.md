@@ -222,42 +222,50 @@ Reshape one latent to match another one:
 <!-- ![Latent Reshape Example](assets/ShapeExample.png) -->
 
 
+## Batch helpers
 ### Parameter Randomization
 
-#### LTRandomRangeUniform
-Generates random values from a uniform distribution.
+LTNumberRangeUniform and LTRandomRangeGaussian are used to randomize inputs to other nodes when scheduling multiple images.
 
-| ![Random Range Uniform Node](assets/UniformLatent.png) |
+#### LTNumberRangeUniform
+Generates random float values from a uniform distribution.
+
+| <img src="assets/NumberRangeUniform.png" alt="LTNumberRangeUniform" width="40%"> |
 |------------|
 | **Inputs** |
-| - `channels`: Number of channels (default: 4) |
-| - `width`: Width of the latent space (will be divided by 8) |
-| - `height`: Height of the latent space (will be divided by 8) |
-| - `batch_size`: Number of samples to generate |
 | - `min`: Minimum value |
 | - `max`: Maximum value |
-| - `seed`: Random seed |
+| - `seed`: Random seed - randomize it to get different values for each image |
 | **Outputs** |
-| - `latent`: Generated latent tensor |
+| - `float`: Generated number as float |
+| - `int`: Generated number as int |
 
-#### LTRandomRangeGaussian
+#### LTNumberRangeGaussian
 Generates random values from a Gaussian distribution.
 
-| ![Random Range Gaussian Node](assets/GaussianLatent.png) |
+| <img src="assets/NumberRangeGaussian.png" alt="LTRandomRangeGaussian" width="40%"> |
 |------------|
 | **Inputs** |
-| - `channels`: Number of channels (default: 4) |
-| - `width`: Width of the latent space (will be divided by 8) |
-| - `height`: Height of the latent space (will be divided by 8) |
-| - `batch_size`: Number of samples to generate |
 | - `mean`: Mean of the normal distribution |
 | - `std`: Standard deviation of the normal distribution |
-| - `seed`: Random seed |
+| - `seed`: Random seed - randomize it to get different values for each image |
 | **Outputs** |
-| - `latent`: Generated latent tensor |
+| - `float`: Generated number as float |
+| - `int`: Generated number as int |
 
 
-## Batch helpers
+** Example: **
+
+Let's randomize a bumch of parameters:
+- For the Gaussian Noise that is used as input:
+   - the mean value will be itself a random value between -0.2 and 0.2.
+   - The standard deviation will be itself a random value with mean 1 and std 0.5, clipped to 0.1 at the low end (using the ComfyMath node).
+- The number of diffusion steps is random uniform betwee 5 and 40.
+- The  cfg is random gussian with mean 8 and std 1, clipped to 0.1 at the low end (using the ComfyMath node).
+
+Using this setup, generate 100 images with different parameters.
+
+![alt text](assets/NumberRangeExample.png)
 
 ### LTFloat_Steps_0001
 ### LTFloat_Steps_0001
@@ -271,7 +279,7 @@ Generates random values from a Gaussian distribution.
 ### LTFloat_Steps_05
 ### LTFloat_Steps_1
 
-These nodes are used to increment/decrement a float value by a fixed amount for batch processing.
+These nodes are used to increment/decrement a float value by a fixed amount when scheduling multiple images.
 
 | ![Float Steps](assets/Float_Step_XXX.png) |
 |------------|
@@ -283,7 +291,7 @@ These nodes are used to increment/decrement a float value by a fixed amount for 
 
 **Example:**
 
-Generat images with fixed seed Gaussian noise, starting with σ etween 0.8 and 1.2 with 0.001 step increments:
+Generate images with fixed seed Gaussian noise, starting with σ etween 0.8 and 1.2 with 0.001 step increments:
 
 ![alt text](assets/Float_StepExample.png)
 
@@ -295,11 +303,3 @@ Result:
 | Sweeping Standard Deviation (σ) | Sweeping Mean (μ) |
 |---|---|
 | ![std sweep](assets/std_sweep.gif) | ![mean sweep](assets/mean_sweep.gif) |
-
-
-<!--
-
-<video width="100%" controls>
-  <source src="assets/std_sweep.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video> -->
