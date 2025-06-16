@@ -284,4 +284,7 @@ Generate 400 images with fixed seed Gaussian noise, starting with σ=0.8 and inc
 ![alt text](assets/Float_StepExample.png)
 
 Result:
-![alt text](assets/std_sweep.mp4)
+<video width="100%" controls>
+  <source src="assets/std_sweep.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
