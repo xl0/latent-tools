@@ -279,13 +279,18 @@ These nodes are used to increment/decrement a float value by a fixed amount for 
 
 **Example:**
 
-Generate 400 images with fixed seed Gaussian noise, starting with σ=0.8 and incrementing by 0.001 for each image to σ=1.2:
+Generat images with fixed seed Gaussian noise, starting with σ etween 0.8 and 1.2 with 0.001 step increments:
 
 ![alt text](assets/Float_StepExample.png)
 
-Result:
+Generate images with fixed seed Gaussian noise, starting with μ between -0.22 and 0.3 with 0.001 step increments:
 
-https://github.com/xl0/latent-tools/assets/std_sweep.mp4
+![alt text](assets/Float_StepExample2.png)
+
+Result:
+| Sweeping Standard Deviation (σ) | Sweeping Mean (μ) |
+|---|---|
+| ![std sweep](assets/std_sweep.gif) | ![mean sweep](assets/mean_sweep.gif) |
 
 
 <!--
