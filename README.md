@@ -18,8 +18,6 @@ Visualizes latent tensors for debugging and inspection.
 
 ![alt text](assets/PreviewLatent.png)
 
-<img src="assets/PreviewLatent.png" alt="Description" width="300">
-
 <!-- ![alt text](assets/PreviewLatent.png) -->
 
 
@@ -31,7 +29,7 @@ Visualizes latent tensors for debugging and inspection.
 
 A KSampler variant that accepts an additional input for starting latent space noise.
 
-| ![KSampler with Noise Input](assets/KSampler.png) |
+| <img src="assets/KSampler.png" alt="LTKSampler" width="70%"> |
 |------------|
 | **Inputs** |
 | - `model`: The model used for denoising |
@@ -53,7 +51,7 @@ A KSampler variant that accepts an additional input for starting latent space no
 
 Generates latent tensors filled with random values from a normal (Gaussian) distribution.
 
-| ![Gaussian Latent Node](assets/GaussianLatent.png) |
+| <img src="assets/GaussianLatent.png" alt="LTGaussianLatent" width="30%"> |
 |------------|
 | **Inputs** |
 | - `channels`: Number of channels (default: 4) |
@@ -70,7 +68,7 @@ Generates latent tensors filled with random values from a normal (Gaussian) dist
 #### LTUniformLatent
 Generates latent tensors with values uniformly distributed between min and max.
 
-| ![Uniform Latent Node](assets/UniformLatent.png) |
+| <img src="assets/UniformLatent.png" alt="LTUniformLatent" width="30%"> |
 |------------|
 | **Inputs** |
 | - `channels`: Number of channels (default: 4) |
@@ -84,12 +82,19 @@ Generates latent tensors with values uniformly distributed between min and max.
 | - `latent`: Generated latent tensor |
 | ![Uniform Latent Node](assets/UniformPlot.png) |
 
+
+**Example:**
+
+| "quick brown fox",  σ=0.9 μ=0 | "quick brown fox", σ=1.05, μ=0 | "quick brown fox", σ=1, μ=0 | "quick brown fox", σ=1, μ=-0.1 | "quick brown fox", σ=1, μ=0.1 |
+|---|---|---|---|---|
+![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_0.9_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.05_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_-0.122_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.122_std_1.0_00001_.png) |
+
 ### Latent Operations
 
 #### LTBlendLatent
 Blends two latent tensors using various blending modes.
 
-| ![Blend Latent Node](assets/BlendLatent.png) |
+| <img src="assets/BlendLatent.png" alt="LTBlendLatent" width="40%"> |
 |------------|
 | **Inputs** |
 | - `latent1`: First latent tensor |
@@ -121,7 +126,7 @@ Blend modes: interpolate (top) and sample (bottom)
 #### LTLatentOp
 Applies mathematical operations to a latent tensor.
 
-| ![Latent Op Node](assets/LatentOp-ops.png) |
+| <img src="assets/LatentOp-ops.png" alt="LTLatentOp" width="80%"> |
 |------------|
 | **Inputs** |
 | - `latent`: Input latent tensor |
@@ -154,7 +159,7 @@ Op: abs
 #### LTLatentsConcatenate
 Concatenates two latent tensors along a specified dimension.
 
-| ![Latent Concatenate Node](assets/LatentsConcatenate.png) |
+|  <img src="assets/LatentsConcatenate.png" alt="LTLatentsConcatenate" width="50%"> |
 |------------|
 | **Inputs** |
 | - `latent1`: First latent tensor |
@@ -184,7 +189,7 @@ Stable Video Diffusion xt (24 frames total), concatenating
 #### LTLatentToShape
 Extracts the shape of a latent tensor.
 
-| ![Latent To Shape Node](assets/LatentToShape.png) |
+| <img src="assets/LatentToShape.png" alt="LTLatentToShape" width="40%"> |
 |------------|
 | **Inputs** |
 | - `input`: Input latent tensor |
@@ -195,7 +200,7 @@ Extracts the shape of a latent tensor.
 #### LTReshapeLatent
 Reshapes a latent tensor to new dimensions.
 
-| ![Latent Reshape Node](assets/ReshapeLatent.png) |
+| <img src="assets/ReshapeLatent.png" alt="LTReshapeLatent" width="50%"> |
 |------------|
 | **Inputs** |
 | - `input`: Input latent tensor |
@@ -207,7 +212,8 @@ Reshapes a latent tensor to new dimensions.
 **Example:**
 Reshape one latent to match another one:
 
-![Latent Reshape Example](assets/ShapeExample.png)
+<img src="assets/ShapeExample.png" alt="LTReshapeLatent" width="70%"> 
+<!-- ![Latent Reshape Example](assets/ShapeExample.png) -->
 
 
 ### Parameter Randomization
@@ -252,12 +258,6 @@ Generates random values from a Gaussian distribution.
 | - `seed`: Random seed |
 | **Outputs** |
 | - `latent`: Generated latent tensor |
-
-**Example:**
-
-| "quick brown fox",  σ=0.9 μ=0 | "quick brown fox", σ=1.05, μ=0 | "quick brown fox", σ=1, μ=0 | "quick brown fox", σ=1, μ=-0.1 | "quick brown fox", σ=1, μ=0.1 |
-|---|---|---|---|---|
-![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_0.9_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.05_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_-0.122_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.122_std_1.0_00001_.png) |
 
 
 ## Batch helpers
