@@ -2,7 +2,7 @@
 
 A collection of nodes for manipulating latent tensors in ComfyUI. These tools provide various operations for working with latent representations in stable diffusion workflows.
 
-gMade in collaboration with [fzayguler](https://github.com/fzayguler)
+Made in collaboration with [fzayguler](https://github.com/fzayguler)
 
 ## Installation
 
