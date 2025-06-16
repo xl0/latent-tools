@@ -22,13 +22,13 @@ Visualizes latent tensors for debugging and inspection.
 
 #### LTKSampler
 
-A KSampler variant that accepts an additional input for latent noise, allowing for precise control over the noise used in the sampling process.
+A KSampler variant that accepts an additional input for starting latent space noise.
 
 | ![KSampler with Noise Input](assets/KSampler.png) |
 |------------|
 | **Inputs** |
 | - `model`: The model used for denoising |
-| - `extra_seed`: Random seed for noise generation |
+| - `extra_seed`: See for any other noise used by the sampler |
 | - `steps`: Number of steps in the denoising process |
 | - `cfg`: Classifier-Free Guidance scale |
 | - `sampler_name`: Algorithm used for sampling |
@@ -36,7 +36,7 @@ A KSampler variant that accepts an additional input for latent noise, allowing f
 | - `positive`: Positive conditioning |
 | - `negative`: Negative conditioning |
 | - `latent_image`: The latent image to denoise |
-| - `latent_noise`: The specific latent noise to use for denoising |
+| - `latent_noise`: Starting noise for the sampler |
 | - `denoise`: Amount of denoising to apply |
 | **Outputs** |
 | - `latent`: The denoised latent tensor |
@@ -173,19 +173,34 @@ Stable Video Diffusion xt (24 frames total), concatenating
 | ![Latent Concatenate Example2](assets/LatentsConcatenateExample2a.gif) | ![Latent Concatenate Example2](assets/LatentsConcatenateExample2b.gif) |
 
 
-#### LTReshapeLatent
-Reshapes a latent tensor to new dimensions.
-
-**Inputs:**
-- `input`: Input latent tensor
-- `strict`: If True, requires exact size match
-- `dim0`-`dim3`: Target dimensions (0 = keep original size)
 
 #### LTLatentToShape
 Extracts the shape of a latent tensor.
 
-**Outputs:**
-- Returns up to 7 dimensions of the input latent shape
+| ![Latent To Shape Node](assets/LatentToShape.png) |
+|------------|
+| **Inputs** |
+| - `input`: Input latent tensor |
+| **Outputs:** |
+| - Return 7 dimensions of the input latent shape. Non-existing ones are returned as 0 |
+
+
+#### LTReshapeLatent
+Reshapes a latent tensor to new dimensions.
+
+| ![Latent Reshape Node](assets/ReshapeLatent.png) |
+|------------|
+| **Inputs** |
+| - `input`: Input latent tensor |
+| - `strict`: If True, requires exact size match |
+| - `dim0`-`dim6`: Target dimensions (0 values are ignored) |
+| **Outputs** |
+| - `latent`: Reshaped latent tensor |
+
+**Example:**
+Reshape one latent to match another one:
+
+![Latent Reshape Example](assets/ShapeExample.png)
 
 
 ### Parameter Randomization
@@ -193,25 +208,80 @@ Extracts the shape of a latent tensor.
 #### LTRandomRangeUniform
 Generates random values from a uniform distribution.
 
+| ![Random Range Uniform Node](assets/UniformLatent.png) |
+|------------|
+| **Inputs** |
+| - `channels`: Number of channels (default: 4) |
+| - `width`: Width of the latent space (will be divided by 8) |
+| - `height`: Height of the latent space (will be divided by 8) |
+| - `batch_size`: Number of samples to generate |
+| - `min`: Minimum value |
+| - `max`: Maximum value |
+| - `seed`: Random seed |
+| **Outputs** |
+| - `latent`: Generated latent tensor |
+
+
+> Note: Stable Diffusion models are usually trained with Gaussian noise, so the generations from Uniform noise will look unusual.
+
+**Example:**
+
+| "quick brown fox", -1.67 to 1.67 | "quick brown fox", -1.81 to 1.81 |
+|---|---|
+![Random Range Uniform Example](assets/FoxUniform_-1.67_1.67.png) | ![Random Range Uniform Example](assets/FoxUniform_-1.81_1.81.png) |
+
 #### LTRandomRangeGaussian
 Generates random values from a Gaussian distribution.
 
-## Usage Examples
+| ![Random Range Gaussian Node](assets/GaussianLatent.png) |
+|------------|
+| **Inputs** |
+| - `channels`: Number of channels (default: 4) |
+| - `width`: Width of the latent space (will be divided by 8) |
+| - `height`: Height of the latent space (will be divided by 8) |
+| - `batch_size`: Number of samples to generate |
+| - `mean`: Mean of the normal distribution |
+| - `std`: Standard deviation of the normal distribution |
+| - `seed`: Random seed |
+| **Outputs** |
+| - `latent`: Generated latent tensor |
 
-1. **Generate and Preview Latent**
-   - Use `LTGaussianLatent` to create random noise
-   - Connect to `LTPreviewLatent` to visualize
+**Example:**
 
-2. **Blend Two Latents**
-   - Generate two different latents
-   - Use `LTBlendLatent` with mode="interpolate"
-   - Adjust the ratio parameter to control the blend
+| "quick brown fox",  σ=0.9 μ=0 | "quick brown fox", σ=1.05, μ=0 | "quick brown fox", σ=1, μ=0 | "quick brown fox", σ=1, μ=-0.1 | "quick brown fox", σ=1, μ=0.1 |
+|---|---|---|---|---|
+![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_0.9_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.05_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_-0.122_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.122_std_1.0_00001_.png) |
 
-3. **Apply Operations**
-   - Load or generate a latent
-   - Use `LTLatentOp` to apply transformations
-   - Chain multiple operations for complex effects
 
-## License
+## Batch helpers
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### LTFloat_Steps_0001
+### LTFloat_Steps_0001
+### LTFloat_Steps_0002
+### LTFloat_Steps_0005
+### LTFloat_Steps_001
+### LTFloat_Steps_002
+### LTFloat_Steps_005
+### LTFloat_Steps_01
+### LTFloat_Steps_02
+### LTFloat_Steps_05
+### LTFloat_Steps_1
+
+These nodes are used to increment/decrement a float value by a fixed amount for batch processing.
+
+| ![Float Steps](assets/Float_Step_XXX.png) |
+|------------|
+| **Inputs** |
+| - `value`: float |
+| **Outputs** |
+| - `float`: float |
+| - `string`: string |
+
+**Example:**
+
+Generate 400 images with fixed seed Gaussian noise, starting with σ=0.8 and incrementing by 0.001 for each image to σ=1.2:
+
+![alt text](assets/Float_StepExample.png)
+
+Result:
+![alt text](assets/std_sweep.mp4)
