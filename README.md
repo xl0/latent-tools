@@ -18,11 +18,6 @@ Visualizes latent tensors for debugging and inspection.
 
 ![alt text](assets/PreviewLatent.png)
 
-<!-- ![alt text](assets/PreviewLatent.png) -->
-
-
-
-
 ### KSampler with additional noise input
 
 #### LTKSampler
@@ -65,6 +60,13 @@ Generates latent tensors filled with random values from a normal (Gaussian) dist
 | - `latent`: Generated latent tensor |
 | ![Gaussian Latent Node](assets/GaussianPlot.png) |
 
+
+**Example:**
+
+| "quick brown fox",  σ=0.9 μ=0 | "quick brown fox", σ=1.05, μ=0 | "quick brown fox", σ=1, μ=0 | "quick brown fox", σ=1, μ=-0.1 | "quick brown fox", σ=1, μ=0.1 |
+|---|---|---|---|---|
+![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_0.9_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.05_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_-0.122_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.122_std_1.0_00001_.png) |
+
 #### LTUniformLatent
 Generates latent tensors with values uniformly distributed between min and max.
 
@@ -83,11 +85,13 @@ Generates latent tensors with values uniformly distributed between min and max.
 | ![Uniform Latent Node](assets/UniformPlot.png) |
 
 
+> Note: Stable Diffusion models are usually trained with Gaussian noise, so the generations from Uniform noise will look unusual.
+
 **Example:**
 
-| "quick brown fox",  σ=0.9 μ=0 | "quick brown fox", σ=1.05, μ=0 | "quick brown fox", σ=1, μ=0 | "quick brown fox", σ=1, μ=-0.1 | "quick brown fox", σ=1, μ=0.1 |
-|---|---|---|---|---|
-![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_0.9_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.05_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.0_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_-0.122_std_1.0_00001_.png) | ![Random Range Gaussian Example](assets/fox_ddpm_2m-karras_mean_0.122_std_1.0_00001_.png) |
+| "quick brown fox", -1.67 to 1.67 | "quick brown fox", -1.81 to 1.81 |
+|---|---|
+![Random Range Uniform Example](assets/FoxUniform_-1.67_1.67.png) | ![Random Range Uniform Example](assets/FoxUniform_-1.81_1.81.png) |
 
 ### Latent Operations
 
@@ -233,15 +237,6 @@ Generates random values from a uniform distribution.
 | - `seed`: Random seed |
 | **Outputs** |
 | - `latent`: Generated latent tensor |
-
-
-> Note: Stable Diffusion models are usually trained with Gaussian noise, so the generations from Uniform noise will look unusual.
-
-**Example:**
-
-| "quick brown fox", -1.67 to 1.67 | "quick brown fox", -1.81 to 1.81 |
-|---|---|
-![Random Range Uniform Example](assets/FoxUniform_-1.67_1.67.png) | ![Random Range Uniform Example](assets/FoxUniform_-1.81_1.81.png) |
 
 #### LTRandomRangeGaussian
 Generates random values from a Gaussian distribution.
