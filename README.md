@@ -18,6 +18,13 @@ Visualizes latent tensors for debugging and inspection.
 
 ![alt text](assets/PreviewLatent.png)
 
+<img src="assets/PreviewLatent.png" alt="Description" width="300">
+
+<!-- ![alt text](assets/PreviewLatent.png) -->
+
+
+
+
 ### KSampler with additional noise input
 
 #### LTKSampler
