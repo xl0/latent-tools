@@ -230,7 +230,7 @@ LTNumberRangeUniform and LTRandomRangeGaussian are used to randomize inputs to o
 #### LTNumberRangeUniform
 Generates random float values from a uniform distribution.
 
-| <img src="assets/NumberRangeUniform.png" alt="LTNumberRangeUniform" width="40%"> |
+| <img src="assets/NumberRangeUniform.png" alt="LTNumberRangeUniform" width="50%"> |
 |------------|
 | **Inputs** |
 | - `min`: Minimum value |
@@ -243,7 +243,7 @@ Generates random float values from a uniform distribution.
 #### LTNumberRangeGaussian
 Generates random values from a Gaussian distribution.
 
-| <img src="assets/NumberRangeGaussian.png" alt="LTRandomRangeGaussian" width="40%"> |
+| <img src="assets/NumberRangeGaussian.png" alt="LTRandomRangeGaussian" width="50%"> |
 |------------|
 | **Inputs** |
 | - `mean`: Mean of the normal distribution |
@@ -254,14 +254,14 @@ Generates random values from a Gaussian distribution.
 | - `int`: Generated number as int |
 
 
-** Example: **
+**Example:**
 
-Let's randomize a bumch of parameters:
+Let's randomize a bumch of parameters for batch generation:
 - For the Gaussian Noise that is used as input:
-   - the mean value will be itself a random value between -0.2 and 0.2.
-   - The standard deviation will be itself a random value with mean 1 and std 0.5, clipped to 0.1 at the low end (using the ComfyMath node).
-- The number of diffusion steps is random uniform betwee 5 and 40.
-- The  cfg is random gussian with mean 8 and std 1, clipped to 0.1 at the low end (using the ComfyMath node).
+   - the mean value will be itself a random uniform value between -0.2 and 0.2.
+   - The standard deviation will be itself a random value with mean 1 and std 0.5, clipped to 0.1 at the low end (using a ComfyMath node).
+- The number of diffusion steps is random uniform value betwee 5 and 40.
+- The cfg is random gussian with mean 8 and std 1, clipped to 0.1 at the low end (using a ComfyMath node).
 
 Using this setup, generate 100 images with different parameters.
 
