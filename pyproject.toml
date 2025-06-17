@@ -11,6 +11,6 @@ Repository = "https://github.com/xl0/latent-tools"
 
 [tool.comfy]
 PublisherId = "xl0"
-DisplayName = "latent-tools"
+DisplayName = "Latent Tools"
 Icon = "https://raw.githubusercontent.com/xl0/latent-tools/master/assets/icon.png"
 Banner = "https://raw.githubusercontent.com/xl0/latent-tools/master/assets/GaussianPlot.png"
