@@ -123,9 +123,9 @@ Blends two latent tensors using various blending modes.
 | `min`             | Element-wise minimum |
 | `sample`          | Randomly sample from either latent based on ratio |
 
-Example:
-Inputs: Random Gaussian σ=1 μ=0 (top) and Random Uniform [-1, 1] (bottom)
-Blend modes: interpolate (top) and sample (bottom)
+Example: \
+Inputs: Random Gaussian σ=0.1 μ=0 (top) and Random Uniform [-1s, 1] (bottom) \
+Blend modes: interpolate (top) and sample (bottom) \
 ![Blend Latent Node](assets/BlendLatentExample.png)
 
 
