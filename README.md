@@ -265,7 +265,10 @@ Let's randomize a bumch of parameters:
 
 Using this setup, generate 100 images with different parameters.
 
-![alt text](assets/NumberRangeExample.png)
+| | |
+|---|---|
+| ![alt text](assets/NumberRangeExample.png) |  <img src="assets/random_params.gif" alt="random_params" width="100%"> |
+
 
 ### LTFloat_Steps_0001
 ### LTFloat_Steps_0001

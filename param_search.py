@@ -44,8 +44,6 @@ FLOAT_STEP_VALUES = [
 
 LTFloatSteps = [ create_float_step_class(step_value) for step_value in FLOAT_STEP_VALUES ]
 
-
-
 class LTNumberRangeUniform:
     @classmethod
     def INPUT_TYPES(cls):
@@ -61,12 +59,12 @@ class LTNumberRangeUniform:
     CATEGORY = "LatentTools"
     DESCRIPTION = "Randomize a parameter using a uniform distribution"
     FUNCTION = "param_range_uniform"
-    RETURN_TYPES = ("FLOAT", "INT")
+    RETURN_TYPES = ("FLOAT", "INT", "STRING")
 
     def param_range_uniform(self, min_value: float, max_value: float, seed: int):
         local_random = random.Random(seed)
         result = local_random.uniform(min_value, max_value)
-        return result, int(result)
+        return result, int(result), str(round(result, 5))
 
 
 class LTNumberRangeGaussian:
@@ -84,9 +82,9 @@ class LTNumberRangeGaussian:
     CATEGORY = "LatentTools"
     DESCRIPTION = "Randomize a parameter using a gaussian distribution"
     FUNCTION = "param_randomizer"
-    RETURN_TYPES = ("FLOAT", "INT")
+    RETURN_TYPES = ("FLOAT", "INT", "STRING")
 
     def param_randomizer(self, mean: float, std: float, seed: int):
         local_random = random.Random(seed)
         result = local_random.gauss(mean, std)
-        return result, int(result)
+        return result, int(result), str(round(result, 5))
