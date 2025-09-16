@@ -1,3 +1,5 @@
+[![](https://alexey.work/badge/)](https://alexey.work?ref=latent-tools-md)
+
 # Latent Tools for ComfyUI
 
 A collection of nodes for manipulating latent tensors in ComfyUI. These tools provide various operations for working with latent representations in stable diffusion workflows.
